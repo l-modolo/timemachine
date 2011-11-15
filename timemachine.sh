@@ -19,7 +19,7 @@ renice +12  -p $$
 
 # sync
 
-rsync $OPTS $SRC sav:$SNAP/latest >> $SRC"rsync.log"
+rsync $OPTS $SRC sav:$SNAP/latest >> $SRC"rsync.log" # sav contain all the necessary information (.ssh/config) for the ssh connection
 
 # check if enough has changed and if so
 # make a hardlinked copy named as the date
@@ -29,7 +29,7 @@ if [ $COUNT -gt $MINCHANGES ] ; then
 	DATETAG=$(date +%Y-%m-%d)
 	if [ ! -e $SNAP/$DATETAG ] ; then
 		scp $SRC"rsync.log" sav:$SNAP/
-		ssh sav 'bash -c "cp -lR '$SNAP'/latest '$SNAP'/'$DATETAG'"'
+		ssh sav 'bash -c "cp -lRf '$SNAP'/latest '$SNAP'/'$DATETAG'"'
 		ssh sav 'bash -c "mv '$SNAP'/rsync.log '$SNAP'/'$DATETAG'/rsync.log"'
 	fi
 fi
